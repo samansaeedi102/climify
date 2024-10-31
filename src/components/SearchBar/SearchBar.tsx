@@ -9,6 +9,11 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ city, setCity, handleSearch }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
   return (
     <Container>
       <Input 
@@ -16,6 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ city, setCity, handleSearch }) =>
         placeholder="Enter city" 
         value={city} 
         onChange={(e) => setCity(e.target.value)} 
+        onKeyDown={handleKeyDown}
       />
       <Button onClick={handleSearch}>Search</Button>
     </Container>

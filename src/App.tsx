@@ -6,16 +6,19 @@ import FavoritesList from './components/FavoritesList/FavoritesList';
 import { fetchWeather } from './services/WeatherService';
 import { fetchCoordinates } from './services/GeocodingService';
 import { WeatherResponse } from './models/WeatherData';
+import { styled } from 'styled-components';
+import { mediaRules } from './themes/media-breakpoints';
 
 interface FavoriteCity {
   name: string;
-  temperature: number; // Add temperature field
+  temperature: number; 
 }
 
 const App: React.FC = () => {
   const [city, setCity] = useState<string>('');  
   const [weatherData, setWeatherData] = useState<WeatherResponse | null>(null);  
-  const [favorites, setFavorites] = useState<FavoriteCity[]>([]);  // Update to store FavoriteCity
+  const [favorites, setFavorites] = useState<FavoriteCity[]>([]);  
+  const [error, setError] = useState<string | null>(null);  
 
   // Load favorites from localStorage on initial render
   useEffect(() => {
@@ -24,13 +27,24 @@ const App: React.FC = () => {
   }, []);
 
   const handleSearch = async () => {
+    // Reset error state on new search
+    setError(null); 
     if (city) {
       try {
+        // Fetch coordinates using the entered city name
         const [latitude, longitude] = await fetchCoordinates(city);
+        if (!latitude || !longitude) {
+          throw new Error('City not found');
+        }
+        // Now fetch the weather data using the obtained coordinates
         const data = await fetchWeather(latitude, longitude);
         setWeatherData(data);
       } catch (error) {
+        // Type assertion to Error
+        const errorMessage = (error as Error).message || 'An error occurred';
+        setError(errorMessage); 
         console.error("Error:", error);
+        setWeatherData(null); 
       }
     }
   };
@@ -60,13 +74,54 @@ const App: React.FC = () => {
   const sortedFavorites = favorites.sort((a, b) => a.temperature - b.temperature);
 
   return (
-    <div>
-      <h1>Climify</h1>
+    <SectionContainer>
+    <MainContainer>
+      <SectionHeader>
+        Climify
+      </SectionHeader>
       <SearchBar city={city} setCity={setCity} handleSearch={handleSearch} />
+      {error && <p style={{ color: 'red' }}>{error}</p>} 
       {weatherData && <WeatherDisplay data={weatherData} addToFavorites={addToFavorites} />}
       <FavoritesList favorites={sortedFavorites} removeFromFavorites={removeFromFavorites} />
-    </div>
+    </MainContainer>
+    </SectionContainer>
   );
 };
 
 export default App;
+
+
+export const SectionContainer = styled.section`
+  padding: 20px;
+  background-color: #fff;
+  margin: 0 5rem;
+`;
+
+export const SectionHeader = styled.h1`
+  padding-left: 1rem;
+  padding-right: 1rem;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 1rem;
+  font-size: 4rem;
+  font-weight: 600;
+  color: black;
+`;
+
+
+export const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+
+  ${mediaRules.sm} {
+    max-width: 720px;
+  }
+  ${mediaRules.md} {
+    max-width: 940px;
+  }
+
+  ${mediaRules.lg} {
+    max-width: 1170px;
+  }
+`;

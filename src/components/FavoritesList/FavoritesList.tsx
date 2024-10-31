@@ -17,12 +17,16 @@ const FavoritesList: React.FC<FavoritesListProps> = ({ favorites, removeFromFavo
     <Container>
       <Title>Favorite Cities</Title>
       <List>
-        {favorites.map((favorite) => (
-          <ListItem key={favorite.name}>
-            {favorite.name} - {favorite.temperature} °C
-            <RemoveButton onClick={() => removeFromFavorites(favorite.name)}>Remove</RemoveButton>
-          </ListItem>
-        ))}
+        {favorites.length > 0 ? (
+          favorites.map((favorite) => (
+            <ListItem key={favorite.name}>
+              {favorite.name} - {favorite.temperature} °C
+              <RemoveButton onClick={() => removeFromFavorites(favorite.name)}>Remove</RemoveButton>
+            </ListItem>
+          ))
+        ) : (
+          <NoFavoritesMessage>No city is chosen as favorite</NoFavoritesMessage>
+        )}
       </List>
     </Container>
   );
@@ -67,4 +71,10 @@ const RemoveButton = styled.button`
   &:hover {
     background-color: #d9363e;
   }
+`;
+
+const NoFavoritesMessage = styled.p`
+  font-size: 16px;
+  color: #888;
+  text-align: center; 
 `;
