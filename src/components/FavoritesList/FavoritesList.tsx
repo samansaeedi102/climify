@@ -37,7 +37,7 @@ export default FavoritesList;
 // Styled Components
 const Container = styled.div`
   padding: 16px;
-  background-color: #e6f7ff;
+  background-color: #f0f8CC;
   border-radius: 8px;
 `;
 

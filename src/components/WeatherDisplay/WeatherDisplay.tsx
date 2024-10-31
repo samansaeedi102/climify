@@ -34,7 +34,7 @@ export default WeatherDisplay;
 const Container = styled.div`
   padding: 16px;
   border-radius: 8px;
-  background-color: #f0f4f8;
+  background-color: #f0f8CC;
 `;
 
 const Title = styled.h2`

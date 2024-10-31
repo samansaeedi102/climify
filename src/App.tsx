@@ -80,7 +80,7 @@ const App: React.FC = () => {
         Climify
       </SectionHeader>
       <SearchBar city={city} setCity={setCity} handleSearch={handleSearch} />
-      {error && <p style={{ color: 'red' }}>{error}</p>} 
+      {error && <ErrorMessage style={{ color: 'red' }}>{error}</ErrorMessage>} 
       {weatherData && <WeatherDisplay data={weatherData} addToFavorites={addToFavorites} />}
       <FavoritesList favorites={sortedFavorites} removeFromFavorites={removeFromFavorites} />
     </MainContainer>
@@ -93,8 +93,8 @@ export default App;
 
 export const SectionContainer = styled.section`
   padding: 20px;
-  background-color: #fff;
-  margin: 0 5rem;
+  background-color: #f0f8ff;
+  height: 100vh;
 `;
 
 export const SectionHeader = styled.h1`
@@ -105,7 +105,8 @@ export const SectionHeader = styled.h1`
   margin-bottom: 1rem;
   font-size: 4rem;
   font-weight: 600;
-  color: black;
+  color: #2c3e50;
+  text-transform: uppercase;
 `;
 
 
@@ -113,7 +114,9 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f0f8CC;
+  padding: 2rem;
   ${mediaRules.sm} {
     max-width: 720px;
   }
@@ -124,4 +127,11 @@ export const MainContainer = styled.div`
   ${mediaRules.lg} {
     max-width: 1170px;
   }
+`;
+
+export const ErrorMessage = styled.p`
+  color: red; 
+  font-weight: bold; 
+  text-align: center;
+  margin: 1rem 0; 
 `;
